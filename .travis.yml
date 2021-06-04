@@ -1,0 +1,58 @@
+which-steps: &which-steps
+  before_install:
+    - which -a python3.9 ; python3.9 --version || true
+    - pyenv install --list | grep 3.9 || true
+
+trusty-steps: &trusty-steps
+  os: linux
+  <<: *which-steps
+
+xenial-steps: &xenial-steps
+  <<: *trusty-steps
+  dist: xenial
+
+bionic-steps: &bionic-steps
+  <<: *trusty-steps
+  dist: bionic
+
+focal-steps: &focal-steps
+  <<: *trusty-steps
+  dist: focal
+
+language: python
+matrix:
+  include:
+    # Trusty Linux =====================
+    - name: "Python 3.8 on Trusty Linux"
+      <<: *trusty-steps
+      python: 3.8
+    - name: "Python 3.9 on Trusty Linux"
+      <<: *trusty-steps
+      python: 3.9
+    # Xenial Linux =====================
+    - name: "Python 3.8 on Xenial Linux"
+      <<: *xenial-steps
+      python: 3.8
+    - name: "Python 3.9 on Xenial Linux"
+      <<: *xenial-steps
+      python: 3.9
+    # Bionic Linux =====================
+    - name: "Python 3.8 on Bionic Linux"
+      <<: *bionic-steps
+      python: 3.8
+    - name: "Python 3.9 on Bionic Linux"
+      <<: *bionic-steps
+      python: 3.9
+    # Focal Linux =====================
+    - name: "Python 3.8 on Focal Linux"
+      <<: *focal-steps
+      python: 3.8
+    - name: "Python 3.9 on Focal Linux"
+      <<: *focal-steps
+      python: 3.9
+
+before_script: python -m pip install --upgrade pip
+script:
+  - python --version ; pip --version
+  - pyenv --version ; pyenv install --list || true
+  - python platform-info.py
